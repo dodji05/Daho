@@ -1,0 +1,191 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}CategoriesArticles index{% endblock %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Ajouter une nouvelle catégorie</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ include('admin/blog/categories_articles/_form.html.twig') }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Liste des catégories</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+
+                                <th>Catégorie</th>
+                                <th>Parent</th>
+
+                                <th>actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for categories_article in categories_articles %}
+                                <tr>
+
+                                    <td>{{ categories_article.nom }}</td>
+                                    <td>{{ categories_article.parent ? categories_article.parent.nom : '' }}</td>
+
+                                    <td>
+                                        <a href="{{ path('categories_articles_edit', {'id': categories_article.id}) }}"
+                                           onclick="BonplanEdit(event, this)" data-rec="{{ categories_article.id }}">
+                                            <i class="bx bx-edit-alt me-1"></i> </a>
+                                        <a href="{{ path('categories_articles_edit', {'id': categories_article.id}) }}">
+                                            <i class="bx bx-trash me-1"></i></a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">Pas de categories</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    {% include 'admin/partials/modal.html.twig' with { modalId: 'edit-modal', modalTitle: 'Modifier une catégorie' } %}
+
+{% endblock %}
+{% block javascript %}
+
+<script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+<script>
+    function BonplanEdit(e, $elem){
+    e.preventDefault();
+    //Get record to edit
+    var $id = $($elem).data('rec');
+    var $modal = $('#pleaseWaitDialog');
+    var $autoEcoleForm = $('#edit-modal');
+    // Block screen
+    $modal.modal('show');
+    $route ="http://127.0.0.1:8000/dashboard/categories/articles/"+$id+"/create-form"
+    $submit_route ="http://127.0.0.1:8000/dashboard/categories/articles/"+$id+"/edit"
+    $urlSucces = window.location.protocol + "//" + window.location.host + window.location.pathname;
+
+    // Ajax request for get edit autoEcole form
+    $.ajax({
+    url:  $route, //Routing.generate('app_autoecole_edit_form', {'id' : $id }),
+    type: 'GET',
+    success: function (html) {
+    // Permit
+    $modal.modal('hide');
+    // add content to display
+
+    $autoEcoleForm.find('.modal-body').html(html);
+    //  alert(html);
+
+    // Add submit link to finish
+    var $submit = $("<input type='button' class ='autoEcole_edit_popup_submit btn btn-outline-success' value='Modifier' />").on('click', function (e) {
+    e.preventDefault();
+    // Get form to submit
+    // alert("html");
+    var $form = $('#categories_articles');
+    // alert($form.serialize());
+    // Validate the form
+    if(!formIsValide()){
+    console.log('Some fields are required !!!');
+    return false;
+}
+
+    // Block btn action for future click
+    var $el = $(this);
+    $el.button('loading');
+    // Submit form
+    $.ajax({
+    type:  $form.attr('method'),
+    url:  $submit_route, //Routing.generate('app_autoecole_edit', {'id' : $id }),
+    data: $form.serialize()
+})
+    .done(function (data) {
+    if(!data.success){
+    console.log(JSON.stringify(data.errors));
+   // alert(JSON.stringify(data.errors))
+}else{
+    // Redirect to Home page
+    window.location.href = $urlSucces;
+}
+}).fail(function (jqXHR, textStatus, errorThrown) {
+    console.log(jqXHR);
+    console.log(textStatus);
+    console.log(errorThrown);
+
+    // Permit the button
+    $el.button('reset');
+});
+});
+
+    // Append it
+    $autoEcoleForm.find('.modal-footer').empty().append($submit);
+    // Display
+    $autoEcoleForm.modal('show');
+}
+})
+}
+    function formIsValide() {
+    var isvalid = true;
+
+    // Vérifier si tous les champs obligatoires sont remplis
+    $('.mandatory').each(function () {
+    var $el = $(this);
+    var val, $parent;
+    if ($el.is('input')) {
+    if ($el.attr('type') === 'number') {
+    val = $.trim($el.val());
+    $parent = $el.closest('.form-group');
+    $parent.removeClass('has-error');
+    if (val == '') {
+    $parent.addClass('has-error');
+    isvalid = isvalid && false;
+}
+} else if ($el.attr('type') === 'checkbox') {
+} else {
+    val = $.trim($el.val());
+    $parent = $el.closest('.form-group');
+    $parent.removeClass('has-error');
+    if (val == '') {
+    $parent.addClass('has-error');
+    isvalid = isvalid && false;
+}
+}
+} else if ($el.is('select')) {
+    val = $.trim($el.val());
+    $parent = $el.closest('.form-group');
+    $parent.removeClass('has-error');
+    if (val == '') {
+    $parent.addClass('has-error');
+    isvalid = isvalid && false;
+}
+} else if ($el.is('textarea')) {
+    val = $.trim($el.val());
+    $parent = $el.closest('.form-group');
+    $parent.removeClass('has-error');
+    if (val == '') {
+    $parent.addClass('has-error');
+    isvalid = isvalid && false;
+}
+}
+});
+
+    return isvalid;
+}
+</script>
+{% endblock %}

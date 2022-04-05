@@ -1,0 +1,57 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+
+{% block body %}
+	<div class="container-xxl flex-grow-1 container-p-y">
+		<div class="row">
+			<div class="col-xl">
+				<div class="card mb-4">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<h5 class="mb-0">Liste des villes</h5>
+					</div>
+					<div class="card-body">
+						<table class="table">
+							<thead>
+								<tr>
+									{# <th>Id</th> #}
+									<th>Name</th>
+
+
+									<th>Latitude</th>
+									<th>Longitude</th>
+									<th>actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for ville in villes %}
+									<tr>
+										{# <td>{{ ville.id }}</td> #}
+										<td>{{ ville.name }}</td>
+										{# <td>{{ ville.description }}</td>
+																											                <td>{{ ville.video }}</td> #}
+										<td>{{ ville.latitude }}</td>
+										<td>{{ ville.longitude }}</td>
+										{# <td>{{ ville.createdAt ? ville.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+																											                <td>{{ ville.updatedAt ? ville.updatedAt|date('Y-m-d H:i:s') : '' }}</td> #}
+										<td>
+											<a href="{{ path('ville_show', {'id': ville.id}) }}">show</a>
+											<a href="{{ path('ville_edit', {'id': ville.id}) }}">edit</a>
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="9">no records found</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<a href="{{ path('ville_new') }}">Create new</a>
+{% endblock %}
+

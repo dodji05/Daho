@@ -1,0 +1,59 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block body %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Liste des articles</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                            <th></th>
+                                <th>Titre</th>
+                                <th>Catégories</th>
+                                <th>Publie</th>
+                                <th>actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for article in articles %}
+                                <tr>
+                                    <td>{{ article.imageArticle }}</td>
+                                    <td>{{ article.titre }}</td>
+                                    <td>Cat</td>
+
+
+{#                                    <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>#}
+{#                                    <td>{{ article.updatedAt ? article.updatedAt|date('Y-m-d H:i:s') : '' }}</td>#}
+                                    <td>{{ article.publie ? 'Yes' : 'No' }}</td>
+
+
+                                    <td>
+                                        <a href="{{ path('blog_show', {'id': article.id}) }}">show</a>
+                                        <a href="{{ path('blog_edit', {'id': article.id}) }}">edit</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="10">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            {#        <a href="{{ path('blog_index') }}">back to list</a>#}
+        </div>
+    </div>
+
+
+
+    <a href="{{ path('blog_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Ville{% endblock %}
+
+{% block body %}
+
+ <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-xl">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Details ville</h5>
+                    <hr/>
+                </div>
+                <div class="card-body">
+                   <table class="table">
+        <tbody>
+            {# <tr>
+                <th>Id</th>
+                <td>{{ ville.id }}</td>
+            </tr> #}
+            <tr>
+                <th>Nom de la ville</th>
+                <td>{{ ville.name }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ ville.description }}</td>
+            </tr>
+            {# <tr>
+                <th>Video</th>
+                <td>{{ ville.video }}</td>
+            </tr> #}
+            <tr>
+                <th>Latitude</th>
+                <td>{{ ville.latitude }}</td>
+            </tr>
+            <tr>
+                <th>Longitude</th>
+                <td>{{ ville.longitude }}</td>
+            </tr>
+            {# <tr>
+                <th>CreatedAt</th>
+                <td>{{ ville.createdAt ? ville.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ ville.updatedAt ? ville.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr> #}
+
+             <tr>
+                <th></th>
+                <td>{{ ville.video }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('ville_index') }}">back to list</a>
+
+    <a href="{{ path('ville_edit', {'id': ville.id}) }}">edit</a>
+
+    {{ include('admin/ville/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+
+
+{#        <a href="{{ path('blog_index') }}">back to list</a>#}
+    </div>
+</div>
+  {% if ville.Images | length > 0 %}
+ <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-xl">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Images</h5>
+                </div>
+                <div class="card-body">
+                                          <div class="container">
+                            <div class="row">
+                                {% for image in ville.Images %}
+                                <div class="col-md-3">
+                                    <img src="{{ vich_uploader_asset (image) }}" alt="" class="img-thumbnail">
+                                     {{ include('admin/ville/_delete_form_image.html.twig') }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
+{#        <a href="{{ path('blog_index') }}">back to list</a>#}
+    </div>
+</div>
+{% endif %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-xl">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Lieux d'interets de la ville</h5>
+                </div>
+                <div class="card-body">
+                
+                </div>
+            </div>
+        </div>
+
+
+{#        <a href="{{ path('blog_index') }}">back to list</a>#}
+    </div>
+</div>
+{% endblock %}

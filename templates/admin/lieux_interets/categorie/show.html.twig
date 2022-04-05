@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CategorieLieuxInterets{% endblock %}
+
+{% block body %}
+    <h1>CategorieLieuxInterets</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ categorie_lieux_interet.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ categorie_lieux_interet.name }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ categorie_lieux_interet.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_lieux_interets_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_lieux_interets_edit', {'id': categorie_lieux_interet.id}) }}">edit</a>
+
+    {{ include('admin/lieux_interets/_delete_form.html.twig') }}
+{% endblock %}

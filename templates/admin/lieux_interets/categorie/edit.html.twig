@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit CategorieLieuxInterets{% endblock %}
+
+{% block body %}
+    <h1>Edit CategorieLieuxInterets</h1>
+
+    {{ include('admin/lieux_interets/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_admin_lieux_interets_index') }}">back to list</a>
+
+    {{ include('admin/lieux_interets/_delete_form.html.twig') }}
+{% endblock %}

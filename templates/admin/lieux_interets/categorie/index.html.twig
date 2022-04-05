@@ -1,0 +1,140 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}CategorieLieuxInterets index{% endblock %}
+
+{% block body %}
+ <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Ajouter une nouvelle catégorie de lieux d'interets</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ include('admin/lieux_interets/categorie/_form.html.twig') }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Liste des catégories de lieux d'interets</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Catégorie lieu interet</th>
+               
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for categorie_lieux_interet in categorie_lieux_interets %}
+            <tr>
+               <td>{{ loop.index }}</td>
+                <td>{{ categorie_lieux_interet.name }}</td>
+               
+                <td>
+                <a href="{{ path('admin_cat_lieux_interets_desactive', {'id': categorie_lieux_interet.id}) }}">Supprimer</a> 
+                    {# <a href="{{ path('app_admin_lieux_interets_show', {'id': categorie_lieux_interet.id}) }}">show</a>
+                    <a href="{{ path('app_admin_lieux_interets_edit', {'id': categorie_lieux_interet.id}) }}">edit</a> #}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+  
+   
+    {# <a href="{{ path('app_admin_lieux_interets_new') }}">Create new</a> #}
+{% endblock %}
+
+{% block javascript %}
+<script>
+function BonplanEdit(e, $elem){
+    e.preventDefault();
+    //Get record to edit
+    var $id = $($elem).data('rec');
+    var $modal = $('#pleaseWaitDialog');
+    var $autoEcoleForm = $('#edit-modal');
+    // Block screen
+    $modal.modal('show');
+    $route ="https://store.jinukun.com/Gestion/admin/bons-plans/"+$id+"/create-form"
+    $submit_route = "https://store.jinukun.com/Gestion/admin/bons-plans/"+$id+"/edit"
+    $urlSucces = window.location.protocol + "//" + window.location.host + window.location.pathname;
+
+    // Ajax request for get edit autoEcole form
+    $.ajax({
+        url:  $route, //Routing.generate('app_autoecole_edit_form', {'id' : $id }),
+        type: 'GET',
+        success: function (html) {
+            // Permit
+            $modal.modal('hide');
+            // add content to display
+
+            $autoEcoleForm.find('.modal-body').html(html);
+            //  alert(html);
+
+            // Add submit link to finish
+            var $submit = $("<input type='button' class ='autoEcole_edit_popup_submit btn btn-outline-success' value='Modifier' />").on('click', function (e) {
+                e.preventDefault();
+                // Get form to submit
+                // alert("html");
+                var $form = $('#bonsplans');
+                // alert($form.serialize());
+                // Validate the form
+                if(!formIsValide()){
+                    console.log('Some fields are required !!!');
+                    return false;
+                }
+
+                // Block btn action for future click
+                var $el = $(this);
+                $el.button('loading');
+                // Submit form
+                $.ajax({
+                    type:  $form.attr('method'),
+                    url:  $submit_route, //Routing.generate('app_autoecole_edit', {'id' : $id }),
+                    data: $form.serialize()
+                })
+                    .done(function (data) {
+                        if(!data.success){
+                            console.log(JSON.stringify(data.errors));
+                            alert(JSON.stringify(data.errors))
+                        }else{
+                            // Redirect to Home page
+                            window.location.href = $urlSucces;
+                        }
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    // Permit the button
+                    $el.button('reset');
+                });
+            });
+
+            // Append it
+            $autoEcoleForm.find('.modal-footer').empty().append($submit);
+            // Display
+            $autoEcoleForm.modal('show');
+        }
+    })
+}
+</script>
+{% endblock %}

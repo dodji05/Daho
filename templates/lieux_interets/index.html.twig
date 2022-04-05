@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LieuxInterets index{% endblock %}
+
+{% block body %}
+    <h1>LieuxInterets index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Video</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Status</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lieux_interet in lieux_interets %}
+            <tr>
+                <td>{{ lieux_interet.id }}</td>
+                <td>{{ lieux_interet.name }}</td>
+                <td>{{ lieux_interet.description }}</td>
+                <td>{{ lieux_interet.video }}</td>
+                <td>{{ lieux_interet.latitude }}</td>
+                <td>{{ lieux_interet.longitude }}</td>
+                <td>{{ lieux_interet.status ? 'Yes' : 'No' }}</td>
+                <td>{{ lieux_interet.createdAt ? lieux_interet.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ lieux_interet.updatedAt ? lieux_interet.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_lieux_interets_show', {'id': lieux_interet.id}) }}">show</a>
+                    <a href="{{ path('app_lieux_interets_edit', {'id': lieux_interet.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_lieux_interets_new') }}">Create new</a>
+{% endblock %}
