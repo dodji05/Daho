@@ -4,17 +4,19 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\HttpFoundation\File\File;
 use App\Repository\LieuxInteretsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=LieuxInteretsRepository::class)
  *  @ApiResource( normalizationContext={"groups"={"lieux:read"}})
- *
+ * @Vich\Uploadable
  */
 class LieuxInterets
 {
@@ -39,19 +41,31 @@ class LieuxInterets
     private $description;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"ville:read","lieux:read","circuit:read","catlieux:read","pointarret:read"})
+     */
+    private $courteDescription;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *  @Groups({"ville:read","lieux:read","circuit:read","catlieux:read","pointarret:read"})
      */
     private $video;
 
+     /**
+     * @Vich\UploadableField(mapping="lieux_images", fileNameProperty="video")
+     * @var File
+     */
+    private $videoFile;
+
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="float",nullable=true)
      *    @Groups({"ville:read","lieux:read","circuit:read","catlieux:read"})
      */
     private $latitude;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      * @Groups({"ville:read","lieux:read","circuit:read","catlieux:read"})
      */
     private $longitude;
@@ -89,12 +103,14 @@ class LieuxInterets
     private $pointsArrets;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
+     *  @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -102,6 +118,7 @@ class LieuxInterets
     {
         $this->images = new ArrayCollection();
         $this->pointsArrets = new ArrayCollection();
+        $this->status = true;
     }
 
     public function getId(): ?int
@@ -132,7 +149,17 @@ class LieuxInterets
 
         return $this;
     }
+    public function getCourteDescription(): ?string
+    {
+        return $this->courteDescription;
+    }
 
+    public function setCourteDescription(?string $courteDescription): self
+    {
+        $this->courteDescription = $courteDescription;
+
+        return $this;
+    }
     public function getVideo(): ?string
     {
         return $this->video;
@@ -145,24 +172,24 @@ class LieuxInterets
         return $this;
     }
 
-    public function getLatitude(): ?string
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function setLatitude(?string $latitude): self
+    public function setLatitude(?float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?string
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    public function setLongitude(?string $longitude): self
+    public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
 
@@ -265,27 +292,45 @@ class LieuxInterets
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(?\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function setVideoFile(File $image = null)
+    {
+        $this->videoFile = $image;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+          //  $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    public function getVideoFile()
+    {
+        return $this->videoFile;
     }
 }

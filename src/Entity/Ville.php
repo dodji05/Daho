@@ -44,33 +44,39 @@ class Ville
     private $description;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"ville:read","circuit:read","lieux:read"})
+     */
+    private $courteDescription;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"ville:read"})
      */
     private $video;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="float", length=255, nullable=true)
      * @Groups({"ville:read"})
      */
     private $latitude;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="float", length=255, nullable=true)
      * @Groups({"ville:read"})
      */
     private $longitude;
 
     /**
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      * @Groups({"ville:read"})
      */
     private $createdAt;
 
     /**
      *  @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      * @Groups({"ville:read"})
      */
     private $updatedAt;
@@ -129,7 +135,17 @@ class Ville
 
         return $this;
     }
+    public function getCourteDescription(): ?string
+    {
+        return $this->courteDescription;
+    }
 
+    public function setCourteDescription(?string $courteDescription): self
+    {
+        $this->courteDescription = $courteDescription;
+
+        return $this;
+    }
     public function getVideo(): ?string
     {
         return $this->video;
@@ -142,48 +158,48 @@ class Ville
         return $this;
     }
 
-    public function getLatitude(): ?string
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function setLatitude(?string $latitude): self
+    public function setLatitude(?float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?string
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    public function setLongitude(?string $longitude): self
+    public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(?\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 

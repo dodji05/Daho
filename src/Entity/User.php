@@ -92,11 +92,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $adresse;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *  @Groups({"user:read"})
+     */
+    private $isoCode;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *  @Groups({"user:read"})
+     */
+    private $dialCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ApiToken::class, mappedBy="user")
+     *  @Groups({"user:read"})
+     */
+    private $fcm_token;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->commentairesCircuits = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->fcm_token = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -334,6 +353,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getIsoCode(): ?string
+    {
+        return $this->isoCode;
+    }
+
+    public function setIsoCode(?string $isoCode): self
+    {
+        $this->isoCode = $isoCode;
+
+        return $this;
+    }
+
+    public function getDialCode(): ?string
+    {
+        return $this->dialCode;
+    }
+
+    public function setDialCode(?string $dialCode): self
+    {
+        $this->dialCode = $dialCode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ApiToken>
+     */
+    public function getFcmToken(): Collection
+    {
+        return $this->fcm_token;
+    }
+
+    public function addFcmToken(ApiToken $fcmToken): self
+    {
+        if (!$this->fcm_token->contains($fcmToken)) {
+            $this->fcm_token[] = $fcmToken;
+            $fcmToken->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFcmToken(ApiToken $fcmToken): self
+    {
+        if ($this->fcm_token->removeElement($fcmToken)) {
+            // set the owning side to null (unless already changed)
+            if ($fcmToken->getUser() === $this) {
+                $fcmToken->setUser(null);
+            }
+        }
 
         return $this;
     }

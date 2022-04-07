@@ -6,6 +6,7 @@
 parameters:
     app.path.blog_images: /uploads/blog/images
     villes: '%kernel.project_dir%/public/uploads/images/ville'
+    lieux: '%kernel.project_dir%/public/uploads/images/lieuxInterets'
     app.locales: [ en, fr ]
 
 services:

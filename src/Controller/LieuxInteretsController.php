@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\LieuxInterets;
 use App\Form\LieuxInteretsType;
+use App\Entity\ImagesLieuxInterets;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\LieuxInteretsRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,9 +38,30 @@ class LieuxInteretsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($lieuxInteret);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_lieux_interets_index', [], Response::HTTP_SEE_OTHER);
+            $images = $form->get('img')->getData();
+          
+                    foreach ($images as $image) {
+                        // On génère un nouveau nom de fichier
+                        $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+            
+                        // On copie le fichier dans le dossier uploads
+                        $image->move(
+                            $this->getParameter('lieux'),
+                            $fichier
+                        );
+                    // On crée l'image dans la base de données
+            
+                    $imgs = new ImagesLieuxInterets();
+                    $imgs->setLieuinteret($lieuxInteret);
+                   $imgs->setUrl($fichier);
+                    $entityManager->persist($imgs);
+                    } 
+
+            $entityManager->flush();
+            
+            $this->addFlash("sucess",'Le lieux d\'interet a été enregistré avec sucess');
+            return $this->redirectToRoute('app_lieux_interets_show', ["id"=>$lieuxInteret->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('lieux_interets/new.html.twig', [

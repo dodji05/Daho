@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use App\Repository\PointsArretsRepository;
@@ -43,10 +44,16 @@ class PointsArrets
     private $lieuInteret;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", length=255, nullable=true)
      * @Groups({"lieux:read","ville:read","circuit:read","pointarret:read"})
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="text", length=255, nullable=true)
+     * @Groups({"lieux:read","ville:read","circuit:read","pointarret:read"})
+     */
+    private $courteDescription;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -55,11 +62,13 @@ class PointsArrets
     private $status;
 
     /**
+     *  @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
 
     /**
+     *  @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime_immutable")
      */
     private $updateAt;
@@ -149,6 +158,18 @@ class PointsArrets
     public function setUpdateAt(?\DateTimeImmutable $updateAt): self
     {
         $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    public function getCourteDescriptionn(): ?string
+    {
+        return $this->courteDescription;
+    }
+
+    public function setCourteDescription(?string $courteDescription): self
+    {
+        $this->courteDescription = $courteDescription;
 
         return $this;
     }

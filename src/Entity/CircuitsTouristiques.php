@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Gedmo\Mapping\Annotation as Gedmo;
+use PhpParser\Node\Expr\Cast\Double;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\CircuitsTouristiquesRepository;
@@ -38,10 +40,16 @@ class CircuitsTouristiques
     private $video;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", length=255, nullable=true)
      * @Groups({"lieux:read","ville:read","circuit:read","catcircuit:read"})
      */
     private $Description;
+
+    /**
+     * @ORM\Column(type="text", length=255, nullable=true)
+     * @Groups({"lieux:read","ville:read","circuit:read","catcircuit:read"})
+     */
+    private $CourteDescription;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -50,7 +58,7 @@ class CircuitsTouristiques
     private $Prix;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      * @Groups({"lieux:read","ville:read","circuit:read","catcircuit:read"})
      */
     private $Distance;
@@ -68,12 +76,14 @@ class CircuitsTouristiques
     private $pointsArrets;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -150,6 +160,18 @@ class CircuitsTouristiques
         return $this;
     }
 
+    public function getCourteDescriptionn(): ?string
+    {
+        return $this->CourteDescription;
+    }
+
+    public function setCourteDescription(?string $CourteDescription): self
+    {
+        $this->CourteDescription = $CourteDescription;
+
+        return $this;
+    }
+
     public function getPrix(): ?float
     {
         return $this->Prix;
@@ -162,12 +184,12 @@ class CircuitsTouristiques
         return $this;
     }
 
-    public function getDistance(): ?string
+    public function getDistance(): ?float
     {
         return $this->Distance;
     }
 
-    public function setDistance(?string $Distance): self
+    public function setDistance(?float $Distance): self
     {
         $this->Distance = $Distance;
 
@@ -216,24 +238,24 @@ class CircuitsTouristiques
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(?\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
